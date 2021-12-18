@@ -1,0 +1,2084 @@
+{
+	"info": {
+		"_postman_id": "f1346a86-c474-4488-8e54-3ac2d95978b5",
+		"name": "Practica 5- eccommerse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_LoginCorrecto_Y_ActualizarToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 200\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga un ACCES_TOKEN\r",
+							"pm.test(\"04- Validar que la respuesta contenga un ACCES_TOKEN\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('access_token');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//Asignar account id y token a la variable\r",
+							"const  responseJson = pm.response.json();\r",
+							"  console.log (\"Valor del Token: \", responseJson.access_token);\r",
+							"  console.log (\"Valor de account_id: \", responseJson.account.account_id);\r",
+							" pm.environment.set(\"token\", responseJson.access_token)\r",
+							" pm.environment.set(\"account_id\", responseJson.account.account_id);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password_validado}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{email_validado}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02_LoginIncorrecto_MalPassword",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 401\r",
+							"pm.test(\"01-validar status code 401, No autorizado\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(401)\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//01 B- Validar que indique LOGIN FALLED\r",
+							"pm.test(\"01 B- Validar que muestre Login FAILED\", ()=>\r",
+							"{\r",
+							" pm.expect(pm.response.text()).to.include('LOGIN_FAILED');\r",
+							"\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "7777",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{email_validado}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_LoginIncorrecto_MalEmail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 401, No autorizado\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(401)\r",
+							"}\r",
+							");\r",
+							"//01 B- Validar que indique LOGIN FALLED\r",
+							"pm.test(\"01 B- Validar que muestre Login FAILED\", ()=>\r",
+							"{\r",
+							" pm.expect(pm.response.text()).to.include('LOGIN_FAILED');\r",
+							"\r",
+							"}\r",
+							");\r",
+							"  \r",
+							"\r",
+							"\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "cor",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "7777",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_Modificar_DatosCorrectos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 200\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga un ACCES_TOKEN\r",
+							"pm.test(\"04- Validar que la respuesta contenga Sonia Modificado\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('Sonia Modificado');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.test(\"validate test status equal to 200\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"account\":{\r\n        \"name\":\"Sonia Modificado\",\r\n        \"phone\":\"6677889900\",\r\n        \"professional\":false}\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05_Modificar_NombreMuyLargo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 400, Bad Request\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(400)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga un Verifica El nombre es demasiado largo\r",
+							"pm.test(\"04- Validar que la respuesta contenga: El nombre es demasiado largo\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('El nombre es demasiado largo');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que la respuesta contenga un ERROR_NAME_TOO_LONG\r",
+							"pm.test(\"05- Validar que la respuesta contenga ERROR_NAME_TOO_LONG\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('ERROR_NAME_TOO_LONG');\r",
+							"}\r",
+							");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.test(\"validate test status equal to 200\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"account\":{\r\n        \"name\":\"NAME TOOOOOO LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG\",\r\n        \"phone\":\"9999999999999\",\r\n        \"professional\":false}\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06_Modificar_TelefónoMuyLargo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 400, Bad Request\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(400)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga un Verifica el número de teléfono, es demasiado largo\r",
+							"pm.test(\"04- Validar que la respuesta contenga Verifica el número de teléfono, es demasiado largo\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('Verifica el número de teléfono, es demasiado largo');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que la respuesta contenga un ERROR_PHONE_TOO_LONGo\r",
+							"pm.test(\"05- Validar que la respuesta contenga ERROR_PHONE_TOO_LONG\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('ERROR_PHONE_TOO_LONG');\r",
+							"}\r",
+							");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.test(\"validate test status equal to 200\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"account\":{\r\n        \"name\":\"bb\",\r\n        \"phone\":\"999999999999999999999999999999999999999999\",\r\n        \"professional\":false}\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07_Modificar_NombreInvalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 400\r",
+							"pm.test(\"01-validar status code 400\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(400)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga un error\r",
+							"pm.test(\"04- Validar que la respuesta contenga un error\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('error');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que la respuesta contenga un ERROR_NAME_TOO_SHORT\r",
+							"pm.test(\"05- Validar que la respuesta contenga un ERROR_NAME_TOO_SHORT\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('ERROR_NAME_TOO_SHORT');\r",
+							"}\r",
+							");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.test(\"validate test status equal to 200\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"account\":{\r\n        \"name\":\"A\",\r\n        \"phone\":\"6677889900\",\r\n        \"professional\":false}\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08-Modificar_TelefonoInvalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 400\r",
+							"pm.test(\"01-validar status code 400, Bad Request\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(400)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga un ACCES_TOKEN\r",
+							"pm.test(\"04- Validar que la respuesta contenga un ERROR\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('error');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que muestre mensaje de validación de caracteres invalidos en telefóno\r",
+							"pm.test(\"05-Validar que muestre mensaje de validación de caracteres invalidos en telefóno\", ()=>\r",
+							"{\r",
+							"pm.expect(pm.response.text()).to.include('Has introducido caracteres inválidos en el número de teléfono');\r",
+							"}\r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.test(\"validate test status equal to 200\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"account\":{\r\n        \"name\":\"Sonia Modificado\",\r\n        \"phone\":\"66778899000000000000hhhh\",\r\n        \"professional\":false}\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09_ConsultarMunicipios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 200\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga all_label\r",
+							"pm.test(\"04- Validar que la respuesta contenga all_label\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('all_label');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que la respuesta contenga children\r",
+							"pm.test(\"05- Validar que la respuesta contenga children\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('children');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"//06- Validar que la respuesta contenga filter_value\r",
+							"pm.test(\"06- Validar que la respuesta contenga filter_value\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('filter_value');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//07- Validar que la respuesta contenga key\r",
+							"pm.test(\"07- Validar que la respuesta contenga key\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('key');\r",
+							"}\r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/public/regions?lang=es&depth=1",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"public",
+						"regions"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						},
+						{
+							"key": "depth",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10-Modificar_professionalInvalido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 400\r",
+							"pm.test(\"01-validar status code 400, Bad Request\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(400)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga un ACCES_TOKEN\r",
+							"pm.test(\"04- Validar que la respuesta contenga un ERROR\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('error');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que muestre mensaje de validación de MISSING_PARAMETERS\r",
+							"pm.test(\"05-Validar que muestre mensaje de validación de caracteres MISSING_PARAMETERS\", ()=>\r",
+							"{\r",
+							"pm.expect(pm.response.text()).to.include('MISSING_PARAMETERS');\r",
+							"}\r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.test(\"validate test status equal to 200\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"account\":{\r\n        \"name\":\"Sonia Modificado\",\r\n        \"phone\":\"66778899000000000000hhhh\",\r\n        \"professional\":$☺☻☻2$$}\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11-Consultar_Categoria",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar varios status \r",
+							"pm.test(\"03-Validar varios status code de respuesta\", ()=> \r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,203,204,205])\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//04-Validar contenga content-Type el header\r",
+							"pm.test(\"04-Validar que responda el header Content Type\",() =>\r",
+							"{\r",
+							"    pm.response.to.have.header(\"content-Type\")\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05-Validar tiempo respuesta\r",
+							"pm.test(\"05-Validar que el tiempo de respuesta esta dentro de los 600 ms\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"}\r",
+							");\r",
+							"\r",
+							"const responseJson = pm.response.json();\r",
+							"//Imprimir en consola\r",
+							"console.log(\"Respuesta en Json: \",responseJson);\r",
+							"console.log(\"Valor code: \", responseJson.categories[0].categories[0].code);\r",
+							"\r",
+							"\r",
+							"//06- Validar que uno de los codigos de las categorias sea 1020\r",
+							"pm.test (\"06-Validar codigo de categoria igual a 1040\", ()=>\r",
+							"{\r",
+							"    pm.expect(responseJson.categories[0].categories[1].code).to.be.eql(\"1040\")\r",
+							"} \r",
+							");\r",
+							"\r",
+							"\r",
+							"//07- Validar longitud \r",
+							"pm.test(\"07-Validar que el campo code tenga solamente 4 digitos\", ()=>\r",
+							" {\r",
+							"    pm.expect(responseJson.categories[0].categories[1].code).to.have.lengthOf(4);\r",
+							"    console.log(\"Imprimir ancho campo: \",responseJson.categories[0].categories[1].code.length)\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//08- Validar response vacio\r",
+							"pm.test(\"08-Validar que el response no se encuentre vacio\", ()=>\r",
+							"{\r",
+							"    pm.response.to.be.not.null;\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.json().id).not.equal(null)\r",
+							"}\r",
+							"\r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{base64}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1/public/categories/insert?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1",
+						"public",
+						"categories",
+						"insert"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12-Consultar_Categoria_InvalidLanguage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 406\r",
+							"pm.test(\"01-validar status code 406, No aceptable\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(406)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							"//04-Validar contenga content-Type el header\r",
+							"pm.test(\"04-Validar que responda el header Content Type\",() =>\r",
+							"{\r",
+							"    pm.response.to.have.header(\"content-Type\")\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05-Validar tiempo respuesta\r",
+							"pm.test(\"05-Validar que el tiempo de respuesta esta dentro de los 600 ms\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"//08- Validar response vacio\r",
+							"pm.test(\"08-Validar que el response no se encuentre vacio\", ()=>\r",
+							"{\r",
+							"    pm.response.to.be.not.null;\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.json().id).not.equal(null)\r",
+							"}\r",
+							"\r",
+							");\r",
+							"\r",
+							"\r",
+							"//04- Validar que la respuesta contenga un ACCES_TOKEN\r",
+							"pm.test(\"04- Validar que la respuesta contenga un ERROR\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('error');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que muestre mensaje de INVALID_LANGUAGE\r",
+							"pm.test(\"05-Validar que muestre mensaje de INVALID_LANGUAGE\", ()=>\r",
+							"{\r",
+							"pm.expect(pm.response.text()).to.include('INVALID_LANGUAGE');\r",
+							"}\r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{base64}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1/public/categories/insert?lang=en",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1",
+						"public",
+						"categories",
+						"insert"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "en"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "13-Crear un UsuarioCorreoMalinator",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//user@mailinator.com\r",
+							"//Se genera un correo en malinator.com y su password\r",
+							"let numrandom = Math.floor(Math.random() * Math.floor(654321));\r",
+							"\r",
+							"console.log(\"Numero Random, \", numrandom);\r",
+							"\r",
+							"var email = \"ventas\" + numrandom.toString(36) + \"@mailinator.com\";  //.concat\r",
+							"var password = numrandom ;\r",
+							"\r",
+							"console.log( \"Correo y password formado \", email,password)\r",
+							"//----------------------SET----------------------------------------------\r",
+							"//Setear las variables para poder utilizarlas\r",
+							"pm.environment.set(\"email\", email)\r",
+							"pm.environment.set(\"password\", password)\r",
+							"const emailFormado = email + ':' + password;\r",
+							"\r",
+							"//mandar a consola\r",
+							"console.log( \"Email formado: \", emailFormado)\r",
+							"\r",
+							"//Cambiar los valores de las variables a Base 64\r",
+							"let encodeKeys = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(emailFormado));\r",
+							"console.log(\"Base64 Formado: \",encodeKeys);\r",
+							"//Setear el base64 para poder utilizarlo\r",
+							"pm.environment.set(\"Base64\",encodeKeys);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//EN ESTA PRUEBA ES PARA GENERAR UN CORREO EN PRE-REQUEST SCRIPT\r",
+							"//01-validar que sea estatus 401\r",
+							"pm.test(\"01-validar status code\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(401)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							"//03-Validar contenga content-Type el header\r",
+							"pm.test(\"04-Validar que responda el header Content Type\",() =>\r",
+							"{\r",
+							"    pm.response.to.have.header(\"content-Type\")\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//04-Validar tiempo respuesta\r",
+							"pm.test(\"05-Validar que el tiempo de respuesta esta dentro de los 1900 ms\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1900);\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							"//05- Validar response vacio\r",
+							"pm.test(\"08-Validar que el response no se encuentre vacio\", ()=>\r",
+							"{\r",
+							"    pm.response.to.be.not.null;\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.json().id).not.equal(null)\r",
+							"}\r",
+							"\r",
+							");\r",
+							"\r",
+							"//06- Validar que tenga Body\r",
+							"pm.test(\"06- Validar Todo el Body\", ()=>\r",
+							"{\r",
+							"    pm.response.to.have.body({\"error\":{\"code\":\"ACCOUNT_VERIFICATION_REQUIRED\"}});\r",
+							"}\r",
+							")\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{Base64}}",
+						"type": "text"
+					},
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"account\":{\"email\":\"{{email}}\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "14_AccountVerification_Required",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01- Validar que no permite entrar mostrando código 401\r",
+							"pm.test(\"01-validar status code 401-No autorizado\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(401)\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//02- Validar el Body contenga código de verificacion requerida\r",
+							"const responseJson = pm.response.json();\r",
+							"pm.test (\"06- Validar que account.email sea igual a true\", ()=>\r",
+							"{\r",
+							"  \r",
+							"    pm.expect(responseJson.error.code).to.be.eqls('ACCOUNT_VERIFICATION_REQUIRED')\r",
+							"   \r",
+							"} \r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{Base64}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"account\":{\"email\":\"{{email}}\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "15_AccountVerification_InvalidoEmail",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01- Validar que no permite entrar mostrando código 400\r",
+							"pm.test(\"01-validar status code 400-Bad request\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(400)\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//02- Validar que la respuesta contenga un VALIDATION_FAILED\r",
+							"pm.test(\"02- Validar que la respuesta contenga VALIDATION_FAILED\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('VALIDATION_FAILED');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03- Validar que la respuesta contenga un ERROR_NAME_TOO_LONG\r",
+							"pm.test(\"03- Validar que la respuesta contenga INVALID_EMAIL_TYPE\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('INVALID_EMAIL_TYPE');\r",
+							"}\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{Base64}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"account\":{\"email\":\"\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "16_Login_ValidarUUID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar varios status \r",
+							"pm.test(\"03-Validar varios status code de respuesta\", ()=> \r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,203,204,205])\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//04-Validar contenga content-Type el header\r",
+							"pm.test(\"04-Validar que responda el header Content Type\",() =>\r",
+							"{\r",
+							"    pm.response.to.have.header(\"content-Type\")\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05-Validar tiempo respuesta\r",
+							"pm.test(\"05-Validar que el tiempo de respuesta esta dentro de los 600 ms\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//06- Validar que account.email sea igual a true\r",
+							"const responseJson = pm.response.json();\r",
+							"pm.test (\"06- Validar que account.email sea igual a true\", ()=>\r",
+							"{\r",
+							"  \r",
+							"    pm.expect(responseJson.account.email_verified).to.be.eqls(true)\r",
+							"   \r",
+							"} \r",
+							");\r",
+							"//07-Validar que contenga un Token\r",
+							"pm.test(\"07-Validar que contenga un Token\" , ()=>\r",
+							"{\r",
+							"    pm.expect(responseJson.access_token).to.be.not.null\r",
+							"}\r",
+							")\r",
+							"//08-Validar que contenga un UUID\r",
+							"pm.test(\"08-Validar que contenga un UUID\", ()=>\r",
+							"{\r",
+							"    pm.expect(responseJson.account.uuid).to.eqls(\"9fc8755b-45b3-45e8-b867-f2d90c987381\")\r",
+							"}\r",
+							")\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password_validado}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{email_validado}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1.1/private/accounts?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1.1",
+						"private",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "17_Modificar_DatosVacios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 400\r",
+							"pm.test(\"01-validar status code 400\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(400)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga\r",
+							"pm.test(\"04- Validar que la respuesta contenga El número de teléfono debe contener al menos 8 dígitos\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('El número de teléfono debe contener al menos 8 dígitos');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que la respuesta contenga un Escribe por lo menos dos caracteres\r",
+							"pm.test(\"05- Validar que la respuesta contenga Escribe por lo menos dos caracteres\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('Escribe por lo menos dos caracteres');\r",
+							"}\r",
+							");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.test(\"validate test status equal to 200\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"account\":{\r\n        \"name\":\"\",\r\n        \"phone\":\"\",\r\n        \"professional\":false}\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "18_Obtener_inmuebles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar varios status \r",
+							"pm.test(\"03-Validar varios status code de respuesta\", ()=> \r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,203,204,205])\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//04-Validar contenga content-Type el header\r",
+							"pm.test(\"04-Validar que responda el header Content Type\",() =>\r",
+							"{\r",
+							"    pm.response.to.have.header(\"content-Type\")\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05-Validar tiempo respuesta\r",
+							"pm.test(\"05-Validar que el tiempo de respuesta esta dentro de los 900 ms\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(900);\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							"//06- Validar que la respuesta contenga locations\r",
+							"pm.test(\"06- Validar que la respuesta contenga locations\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('locations');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//07- Validar que la respuesta contenga category\r",
+							"pm.test(\"07- Validar que la respuesta contenga category\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('category');\r",
+							"}\r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{url_base}}/highlights/v1/public/highlights?prio=3&cat=1000&lim=16",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"highlights",
+						"v1",
+						"public",
+						"highlights"
+					],
+					"query": [
+						{
+							"key": "prio",
+							"value": "3"
+						},
+						{
+							"key": "cat",
+							"value": "1000"
+						},
+						{
+							"key": "lim",
+							"value": "16"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "19_Obtener_Carros",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 200\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar varios status \r",
+							"pm.test(\"03-Validar varios status code de respuesta\", ()=> \r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,203,204,205])\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//04-Validar contenga content-Type el header\r",
+							"pm.test(\"04-Validar que responda el header Content Type\",() =>\r",
+							"{\r",
+							"    pm.response.to.have.header(\"content-Type\")\r",
+							"    //OR\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05-Validar tiempo respuesta\r",
+							"pm.test(\"05-Validar que el tiempo de respuesta esta dentro de los 900 ms\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(900);\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"\r",
+							"//0- Validar que la respuesta contenga locations\r",
+							"pm.test(\"06- Validar que la respuesta contenga locations\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('locations');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//07- Validar que la respuesta contenga code\r",
+							"pm.test(\"07- Validar que la respuesta contenga code\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('code');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"//08- Validar que la respuesta contenga key\r",
+							"pm.test(\"08- Validar que la respuesta contenga key\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('key');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//09- Validar que la respuesta contenga label\r",
+							"pm.test(\"09- Validar que la respuesta contenga label\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('label');\r",
+							"}\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://webapi.segundamano.mx/highlights/v1/public/highlights?prio=2&cat=2020&lim=16",
+					"protocol": "https",
+					"host": [
+						"webapi",
+						"segundamano",
+						"mx"
+					],
+					"path": [
+						"highlights",
+						"v1",
+						"public",
+						"highlights"
+					],
+					"query": [
+						{
+							"key": "prio",
+							"value": "2"
+						},
+						{
+							"key": "cat",
+							"value": "2020"
+						},
+						{
+							"key": "lim",
+							"value": "16"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "20_ConsultarPerfil",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//01-validar que sea estatus 200\r",
+							"pm.test(\"01-validar status code 200\", () => \r",
+							"{\r",
+							"    pm.response.to.have.status(200)\r",
+							"}\r",
+							");\r",
+							"//02-Validar que la respuesta sea jSon\r",
+							"pm.test(\"02-Validar que el body responde en Json\", function ()\r",
+							"{\r",
+							"pm.response.to.be.json;\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//03-Validar que el header contenga un content type\r",
+							"pm.test(\"03-Validar que el header contenga un content type\", ()=>\r",
+							"{\r",
+							"pm.response.to.have.header(\"Content-type\")\r",
+							"pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json; charset=utf-8')\r",
+							"}\r",
+							");\r",
+							"//04- Validar que la respuesta contenga account_id\r",
+							"pm.test(\"04- Validar que la respuesta contenga account_id\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('account_id');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//05- Validar que la respuesta contenga can_publish\r",
+							"pm.test(\"05- Validar que la respuesta contenga can_publish\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('can_publish');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"\r",
+							"//06- Validar que la respuesta contenga name\r",
+							"pm.test(\"06- Validar que la respuesta contenga name\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('name');\r",
+							"}\r",
+							");\r",
+							"\r",
+							"//07- Validar que la respuesta contenga uuid\r",
+							"pm.test(\"07- Validar que la respuesta contenga uuid\", ()=>\r",
+							"{\r",
+							"    pm.expect(pm.response.text()).to.include('uuid');\r",
+							"}\r",
+							");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "tag:scmcoord.com,2013:api {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "https://www.segundamano.mx",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{url_base}}/nga/api/v1{{account_id}}?lang=es&",
+					"protocol": "https",
+					"host": [
+						"{{url_base}}"
+					],
+					"path": [
+						"nga",
+						"api",
+						"v1{{account_id}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "es"
+						},
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
